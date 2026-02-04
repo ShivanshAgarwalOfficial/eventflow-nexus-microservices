@@ -131,7 +131,7 @@ npm run dev
 ## 🎯 Milestones
 
 - [x] **Phase 1**: Foundation Setup (Monorepo, Docker, Shared Packages)
-- [ ] **Phase 2**: User & Auth Service (JWT, Guards)
+- [x] **Phase 2**: User & Auth Service (JWT, Guards)
 - [ ] **Phase 3**: Event Service (MongoDB, CRUD)
 - [ ] **Phase 4**: Booking Service (CQRS, Event Sourcing)
 - [ ] **Phase 5**: Payment & Notification Services
