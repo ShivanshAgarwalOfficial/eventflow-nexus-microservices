@@ -1,0 +1,121 @@
+version: "3.8"
+
+services:
+  # ══════════════════════════════════════════════════════════
+  # DATABASES
+  # ══════════════════════════════════════════════════════════
+  postgres:
+    image: postgres:15-alpine
+    container_name: eventflow-postgres
+    environment:
+      POSTGRES_USER: eventflow
+      POSTGRES_PASSWORD: eventflow123
+      POSTGRES_DB: eventflow
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - eventflow-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U eventflow"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  mongodb:
+    image: mongo:7
+    container_name: eventflow-mongodb
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: eventflow
+      MONGO_INITDB_ROOT_PASSWORD: eventflow123
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+    networks:
+      - eventflow-network
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ══════════════════════════════════════════════════════════
+  # MESSAGE BROKER & CACHE
+  # ══════════════════════════════════════════════════════════
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    container_name: eventflow-rabbitmq
+    environment:
+      RABBITMQ_DEFAULT_USER: eventflow
+      RABBITMQ_DEFAULT_PASS: eventflow123
+    ports:
+      - "5672:5672" # AMQP
+      - "15672:15672" # Management UI
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    networks:
+      - eventflow-network
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    container_name: eventflow-redis
+    command: redis-server --requirepass eventflow123
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - eventflow-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ══════════════════════════════════════════════════════════
+  # MICROSERVICES (Placeholder - will add once services are built)
+  # ══════════════════════════════════════════════════════════
+  # api-gateway:
+  #   build:
+  #     context: .
+  #     dockerfile: infrastructure/docker/Dockerfile.service
+  #     args:
+  #       SERVICE_NAME: api-gateway
+  #   container_name: eventflow-api-gateway
+  #   ports:
+  #     - "3000:3000"
+  #   depends_on:
+  #     - redis
+  #     - user-service
+  #     - event-service
+  #   networks:
+  #     - eventflow-network
+  #   env_file:
+  #     - ./apps/api-gateway/.env
+
+# ══════════════════════════════════════════════════════════
+# VOLUMES
+# ══════════════════════════════════════════════════════════
+volumes:
+  postgres_data:
+    driver: local
+  mongo_data:
+    driver: local
+  rabbitmq_data:
+    driver: local
+  redis_data:
+    driver: local
+
+# ══════════════════════════════════════════════════════════
+# NETWORKS
+# ══════════════════════════════════════════════════════════
+networks:
+  eventflow-network:
+    driver: bridge
