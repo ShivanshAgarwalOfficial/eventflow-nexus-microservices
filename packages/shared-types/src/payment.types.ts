@@ -14,6 +14,7 @@ export interface Payment {
 export enum PaymentProvider {
     STRIPE = 'stripe',
     PAYPAL = 'paypal',
+    MOCK = 'mock',
 }
 
 export enum PaymentStatus {
