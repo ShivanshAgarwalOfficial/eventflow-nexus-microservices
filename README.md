@@ -132,9 +132,9 @@ npm run dev
 
 - [x] **Phase 1**: Foundation Setup (Monorepo, Docker, Shared Packages)
 - [x] **Phase 2**: User & Auth Service (JWT, Guards)
-- [ ] **Phase 3**: Event Service (MongoDB, CRUD)
-- [ ] **Phase 4**: Booking Service (CQRS, Event Sourcing)
-- [ ] **Phase 5**: Payment & Notification Services
+- [x] **Phase 3**: Event Service (MongoDB, CRUD)
+- [x] **Phase 4**: Booking Service (CQRS, Event Sourcing)
+- [x] **Phase 5**: Payment & Notification Services
 - [ ] **Phase 6**: Job Queue & Analytics
 - [ ] **Phase 7**: Next.js Frontend Implementation
 - [ ] **Phase 8**: Deployment & CI/CD
